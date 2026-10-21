@@ -1,0 +1,11 @@
+.env
+.env.*
+*.log
+*private*
+node_modules
+.vercel
+test
+server.js
+README.md
+
+api/*.test.js
