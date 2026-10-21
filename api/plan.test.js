@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import handler from './plan.js';
+function response(){return {headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(d){this.body=d;return this}}}
+test('reject non-POST without provider calls',async()=>{const r=response();await handler({method:'GET',headers:{}},r);assert.equal(r.code,405)});
+test('missing keys return friendly setup error without secrets',async()=>{const a=process.env.QLOO_API_KEY,b=process.env.GEMINI_API_KEY;delete process.env.QLOO_API_KEY;delete process.env.GEMINI_API_KEY;const r=response();await handler({method:'POST',headers:{},socket:{remoteAddress:'test'},body:{}},r);assert.equal(r.code,503);assert.match(r.body.error,/Server setup/);if(a)process.env.QLOO_API_KEY=a;if(b)process.env.GEMINI_API_KEY=b});
